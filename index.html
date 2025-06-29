@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PWRMind</title>
+    <title>Портфолио Разработчика | LLM & AI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.45/dist/vue.global.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -12,6 +12,7 @@
             --primary: #3498db;
             --secondary: #2c3e50;
             --accent: #e74c3c;
+            --llm-color: #9b59b6;
             --light: #ecf0f1;
             --dark: #2c3e50;
             --success: #27ae60;
@@ -100,14 +101,25 @@
             color: var(--primary);
         }
         
-        .nav-links a.active::after {
+        .nav-links a.llm-active {
+            color: var(--llm-color);
+        }
+        
+        .nav-links a.active::after, .nav-links a.llm-active::after {
             content: '';
             position: absolute;
             bottom: -5px;
             left: 0;
             width: 100%;
             height: 2px;
+        }
+        
+        .nav-links a.active::after {
             background-color: var(--primary);
+        }
+        
+        .nav-links a.llm-active::after {
+            background-color: var(--llm-color);
         }
         
         .mobile-menu-btn {
@@ -195,6 +207,14 @@
             color: white;
         }
         
+        .btn-llm {
+            background-color: var(--llm-color);
+        }
+        
+        .btn-llm:hover {
+            background-color: #8e44ad;
+        }
+        
         .social-icons {
             display: flex;
             margin-top: 40px;
@@ -251,6 +271,10 @@
             border-radius: 2px;
         }
         
+        .llm-section .section-title h2::after {
+            background-color: var(--llm-color);
+        }
+        
         .section-title p {
             color: var(--gray);
             max-width: 700px;
@@ -279,9 +303,12 @@
         
         .project-image {
             height: 200px;
-            background-color: var(--primary);
             position: relative;
             overflow: hidden;
+        }
+        
+        .llm-project .project-image {
+            background-color: var(--llm-color);
         }
         
         .project-image img {
@@ -302,6 +329,10 @@
         .project-content h3 {
             margin-bottom: 10px;
             font-size: 1.4rem;
+        }
+        
+        .llm-project .project-content h3 {
+            color: var(--llm-color);
         }
         
         .project-content p {
@@ -326,6 +357,11 @@
             margin-bottom: 8px;
         }
         
+        .llm-tag {
+            background-color: rgba(155, 89, 182, 0.1);
+            color: var(--llm-color);
+        }
+        
         .project-links {
             display: flex;
         }
@@ -340,12 +376,45 @@
             transition: var(--transition);
         }
         
+        .llm-project .project-links a {
+            color: var(--llm-color);
+        }
+        
         .project-links a:hover {
             color: var(--accent);
         }
         
+        .llm-project .project-links a:hover {
+            color: #8e44ad;
+        }
+        
         .project-links a i {
             margin-right: 5px;
+        }
+        
+        /* LLM Section */
+        .llm-section {
+            background: linear-gradient(rgba(155, 89, 182, 0.03), rgba(155, 89, 182, 0.05));
+        }
+        
+        .llm-banner {
+            background: linear-gradient(90deg, #8e44ad, #9b59b6);
+            color: white;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin-bottom: 50px;
+        }
+        
+        .llm-banner h3 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .llm-banner p {
+            max-width: 800px;
+            margin: 0 auto;
+            font-size: 1.1rem;
         }
         
         /* Contact Section */
@@ -602,11 +671,12 @@
         <header>
             <div class="container">
                 <nav>
-                    <a href="#" class="logo">Dev<span>Portfolio</span></a>
+                    <a href="#" class="logo">AI<span>Portfolio</span></a>
                     <ul class="nav-links" :class="{active: mobileMenu}">
                         <li><a href="#" @click.prevent="scrollToSection('home')" :class="{active: activeSection === 'home'}">Главная</a></li>
                         <li><a href="#" @click.prevent="scrollToSection('backend')" :class="{active: activeSection === 'backend'}">Бекенд</a></li>
                         <li><a href="#" @click.prevent="scrollToSection('frontend')" :class="{active: activeSection === 'frontend'}">Фронтенд</a></li>
+                        <li><a href="#" @click.prevent="scrollToSection('llm')" :class="{active: activeSection === 'llm', 'llm-active': activeSection === 'llm'}">LLM & AI</a></li>
                         <li><a href="#" @click.prevent="scrollToSection('system')" :class="{active: activeSection === 'system'}">Системные</a></li>
                         <li><a href="#" @click.prevent="scrollToSection('contact')" :class="{active: activeSection === 'contact'}">Контакты</a></li>
                     </ul>
@@ -621,10 +691,10 @@
         <section id="home" class="hero">
             <div class="container">
                 <div class="hero-content">
-                    <h1 class="animate">Привет, я <span>Алексей</span><br>Fullstack Разработчик</h1>
-                    <p class="animate delay-1">Создаю современные веб-приложения с использованием передовых технологий и лучших практик разработки.</p>
+                    <h1 class="animate">Привет, я <span>Максим</span><br>AI Разработчик</h1>
+                    <p class="animate delay-1">Создаю интеллектуальные системы, LLM-агентов и современные приложения с использованием передовых технологий.</p>
                     <div class="btn-container animate delay-2">
-                        <a href="#" @click.prevent="scrollToSection('projects')" class="btn">Мои проекты</a>
+                        <a href="#" @click.prevent="scrollToSection('llm')" class="btn btn-llm">LLM проекты</a>
                         <a href="#" @click.prevent="scrollToSection('contact')" class="btn btn-outline">Связаться</a>
                     </div>
                     <div class="social-icons animate delay-3">
@@ -632,6 +702,41 @@
                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
                         <a href="#"><i class="fab fa-telegram"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LLM & AI Section -->
+        <section id="llm" class="llm-section">
+            <div class="container">
+                <div class="llm-banner">
+                    <h3>LLM & AI Проекты</h3>
+                    <p>Создание конвейеров обработки естественного языка, LLM-агентов и систем искусственного интеллекта</p>
+                </div>
+                
+                <div class="section-title">
+                    <h2>LLM & AI Проекты</h2>
+                    <p>Специализация в создании конвейеров обработки естественного языка и интеллектуальных агентов</p>
+                </div>
+                
+                <div class="projects-grid">
+                    <div class="project-card llm-project animate" v-for="(project, index) in llmProjects" :key="'llm-'+index">
+                        <div class="project-image">
+                            <img :src="project.image" alt="Project">
+                        </div>
+                        <div class="project-content">
+                            <h3>{{ project.title }}</h3>
+                            <p>{{ project.description }}</p>
+                            <div class="project-tags">
+                                <span class="tag llm-tag" v-for="(tag, tagIndex) in project.tags" :key="'tag-'+tagIndex">{{ tag }}</span>
+                            </div>
+                            <div class="project-links">
+                                <a :href="project.github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                                <a :href="project.demo" target="_blank" v-if="project.demo"><i class="fas fa-external-link-alt"></i> Демо</a>
+                                <a :href="project.docs" target="_blank" v-if="project.docs"><i class="fas fa-book"></i> Документация</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -743,14 +848,14 @@
                                 <i class="fas fa-envelope"></i>
                                 <div>
                                     <h4>Email</h4>
-                                    <p>contact@devportfolio.com</p>
+                                    <p>contact@aiportfolio.com</p>
                                 </div>
                             </div>
                             <div class="contact-item">
                                 <i class="fas fa-phone"></i>
                                 <div>
                                     <h4>Телефон</h4>
-                                    <p>+7 (999) 123-45-67</p>
+                                    <p>+7 (999) 765-43-21</p>
                                 </div>
                             </div>
                         </div>
@@ -796,8 +901,8 @@
             <div class="container">
                 <div class="footer-content">
                     <div class="footer-column">
-                        <h3>DevPortfolio</h3>
-                        <p>Современное портфолио для демонстрации проектов разработчика и привлечения клиентов и работодателей.</p>
+                        <h3>AIPortfolio</h3>
+                        <p>Современное портфолио для демонстрации проектов разработчика с акцентом на LLM и AI решения.</p>
                     </div>
                     <div class="footer-column">
                         <h3>Разделы</h3>
@@ -805,6 +910,7 @@
                             <li><a href="#" @click.prevent="scrollToSection('home')">Главная</a></li>
                             <li><a href="#" @click.prevent="scrollToSection('backend')">Бекенд проекты</a></li>
                             <li><a href="#" @click.prevent="scrollToSection('frontend')">Фронтенд проекты</a></li>
+                            <li><a href="#" @click.prevent="scrollToSection('llm')">LLM & AI</a></li>
                             <li><a href="#" @click.prevent="scrollToSection('system')">Системные программы</a></li>
                             <li><a href="#" @click.prevent="scrollToSection('contact')">Контакты</a></li>
                         </ul>
@@ -813,13 +919,13 @@
                         <h3>Контакты</h3>
                         <ul class="footer-links">
                             <li><i class="fas fa-map-marker-alt"></i> Москва, Россия</li>
-                            <li><i class="fas fa-envelope"></i> contact@devportfolio.com</li>
-                            <li><i class="fas fa-phone"></i> +7 (999) 123-45-67</li>
+                            <li><i class="fas fa-envelope"></i> contact@aiportfolio.com</li>
+                            <li><i class="fas fa-phone"></i> +7 (999) 765-43-21</li>
                         </ul>
                     </div>
                 </div>
                 <div class="copyright">
-                    &copy; 2023 DevPortfolio. Все права защищены.
+                    &copy; 2023 AIPortfolio. Все права защищены.
                 </div>
             </div>
         </footer>
@@ -840,6 +946,35 @@
                     message: ''
                 });
                 
+                const llmProjects = ref([
+                    {
+                        title: "Конвейер обработки NLP",
+                        description: "Масштабируемый конвейер для обработки естественного языка с использованием трансформеров",
+                        tags: ["BERT", "HuggingFace", "PyTorch", "NLP"],
+                        github: "#",
+                        demo: "#",
+                        docs: "#",
+                        image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%239b59b6'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>NLP Pipeline</text></svg>"
+                    },
+                    {
+                        title: "LLM-агент для поддержки",
+                        description: "Интеллектуальный агент на базе GPT для автоматизации поддержки клиентов",
+                        tags: ["GPT-4", "LangChain", "Python", "RAG"],
+                        github: "#",
+                        demo: "#",
+                        docs: "#",
+                        image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%238e44ad'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>Support Agent</text></svg>"
+                    },
+                    {
+                        title: "Система семантического поиска",
+                        description: "Поисковая система на базе эмбеддингов с использованием векторных БД",
+                        tags: ["Embeddings", "Pinecone", "FAISS", "Semantic Search"],
+                        github: "#",
+                        demo: "#",
+                        image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%237d3c98'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>Semantic Search</text></svg>"
+                    }
+                ]);
+                
                 const backendProjects = ref([
                     {
                         title: "RESTful API сервис",
@@ -856,14 +991,6 @@
                         github: "#",
                         demo: null,
                         image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%232c3e50'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>Микросервисы</text></svg>"
-                    },
-                    {
-                        title: "Аналитическая платформа",
-                        description: "Серверная часть для сбора и обработки больших данных с визуализацией в реальном времени",
-                        tags: ["Python", "Django", "PostgreSQL", "Redis"],
-                        github: "#",
-                        demo: "#",
-                        image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23e74c3c'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>Аналитика</text></svg>"
                     }
                 ]);
                 
@@ -883,14 +1010,6 @@
                         github: "#",
                         demo: "#",
                         image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%239b59b6'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>Админка</text></svg>"
-                    },
-                    {
-                        title: "Социальная сеть",
-                        description: "SPA социальная сеть с лентой новостей, мессенджером и профилями пользователей",
-                        tags: ["Vue.js", "Firebase", "WebSockets", "Vuetify"],
-                        github: "#",
-                        demo: "#",
-                        image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23f39c12'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>Соцсеть</text></svg>"
                     }
                 ]);
                 
@@ -910,14 +1029,6 @@
                         github: "#",
                         docs: "#",
                         image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%23d35400'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>Монитор</text></svg>"
-                    },
-                    {
-                        title: "Файловый менеджер",
-                        description: "Продвинутый файловый менеджер с поддержкой облачных хранилищ и шифрованием",
-                        tags: ["Electron", "React", "Node.js"],
-                        github: "#",
-                        docs: "#",
-                        image: "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='200' viewBox='0 0 400 200'><rect width='400' height='200' fill='%237f8c8d'/><text x='50%' y='50%' font-size='20' text-anchor='middle' fill='white' font-family='Arial'>Файлы</text></svg>"
                     }
                 ]);
                 
@@ -945,7 +1056,7 @@
                 }
                 
                 function handleScroll() {
-                    const sections = ['home', 'backend', 'frontend', 'system', 'contact'];
+                    const sections = ['home', 'llm', 'backend', 'frontend', 'system', 'contact'];
                     const scrollPosition = window.scrollY + 100;
                     
                     for (const section of sections) {
@@ -979,6 +1090,7 @@
                     activeSection,
                     mobileMenu,
                     form,
+                    llmProjects,
                     backendProjects,
                     frontendProjects,
                     systemProjects,
