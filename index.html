@@ -961,7 +961,7 @@
                     isLoading.value = true;
                     error.value = null;
                     
-                    fetch('https://api.github.com/users/pwrmind/repos?per_page=10', {
+                    fetch('https://api.github.com/users/pwrmind/repos?per_page=100', {
                     headers: {
                         'Accept': 'application/vnd.github.v3+json'
                     }
@@ -975,7 +975,8 @@
                     .then(repos => {
                     // Фильтрация и преобразование данных
                     const backendRepos = repos
-                        .filter(repo => ['JavaScript', 'TypeScript', 'Python', 'Java', 'Go'].includes(repo.language) && repo.description)
+                        //.filter(repo => ['JavaScript', 'TypeScript', 'Python', 'Java', 'Go'].includes(repo.language) && repo.description)
+                        .filter(repo => [].includes(repo.language) && repo.description)
                         .slice(0, 3);
                     
                     backendProjects.value = backendRepos.map(repo => ({
