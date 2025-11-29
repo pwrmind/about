@@ -960,72 +960,57 @@
                 function fetchBackendProjects() {
                     isLoading.value = true;
                     error.value = null;
-                    const username = 'pwrmind'; // Ваш GitHub username
                     
-                    try {
-                    // Исправленный URL с правильным форматом
-                    const url = `https://api.github.com/users/${username}/repos?per_page=10`;
-                    
-                    const response = fetch(url, {
-                        headers: {
-                        'Accept': 'application/vnd.github.v3+json',
-                        // Для увеличения лимита запросов добавьте токен:
-                        // 'Authorization': 'Bearer YOUR_GITHUB_TOKEN'
-                        }
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`Ошибка GitHub API: ${response.status}`);
+                    fetch('https://api.github.com/users/pwrmind/repos?per_page=10', {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json'
                     }
-
-                    const repos = response.json();
-                    
-                    // Фильтрация бэкенд-проектов по языку и наличию описания
+                    })
+                    .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`GitHub API error: ${response.status}`);
+                    }
+                    return response.json();
+                    })
+                    .then(repos => {
+                    // Фильтрация и преобразование данных
                     const backendRepos = repos
-                        .filter(repo => {
-                        const backendLanguages = [
-                            'JavaScript', 'TypeScript', 'Python', 'Java', 'Go', 
-                            'Ruby', 'PHP', 'C#', 'Rust', 'Node.js'
-                        ];
-                        return (
-                            backendLanguages.includes(repo.language) && 
-                            repo.description && // Только с описанием
-                            !repo.fork // Исключаем форки
-                        );
-                        })
-                        .slice(0, 3); // Берем первые 3 подходящих проекта
+                        .filter(repo => ['JavaScript', 'TypeScript', 'Python', 'Java', 'Go'].includes(repo.language) && repo.description)
+                        .slice(0, 3);
                     
-                    // Преобразование в нужный формат
                     backendProjects.value = backendRepos.map(repo => ({
                         title: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
                         description: repo.description,
-                        tags: [
-                        repo.language,
-                        ...repo.topics.slice(0, 2) // Берем первые 2 топика как теги
-                        ].filter(Boolean),
+                        tags: [repo.language],
                         github: repo.html_url,
-                        demo: repo.homepage || null,
-                        // Дополнительные данные для отображения
-                        stars: repo.stargazers_count,
-                        lastUpdate: new Date(repo.updated_at).toLocaleDateString('ru-RU')
+                        demo: repo.homepage || null
                     }));
-                    
-                    } catch (err) {
+                    })
+                    .catch(err => {
                     console.error('Ошибка загрузки проектов:', err);
-                    error.value = err.message || 'Не удалось загрузить проекты';
-                    // Резервные данные на случай ошибки
+                    error.value = 'Не удалось загрузить проекты с GitHub';
+                    
+                    // Резервные данные
                     backendProjects.value = [
                         {
                         title: "RESTful API сервис",
-                        description: "Масштабируемый API для e-commerce платформы с аутентификацией JWT",
+                        description: "Масштабируемый API для e-commerce платформы",
                         tags: ["Node.js", "Express", "MongoDB"],
+                        github: "#",
+                        demo: null
+                        },
+                        {
+                        title: "Микросервисная архитектура",
+                        description: "Система управления заказами на основе микросервисов",
+                        tags: ["Docker", "Kubernetes", "gRPC"],
                         github: "#",
                         demo: null
                         }
                     ];
-                    } finally {
+                    })
+                    .finally(() => {
                     isLoading.value = false;
-                    }
+                    });
                 }
                 
                 const frontendProjects = ref([
