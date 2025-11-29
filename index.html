@@ -683,26 +683,66 @@
         <section id="backend" class="backend">
             <div class="container">
                 <div class="section-title">
-                    <h2>Бекенд проекты</h2>
-                    <p>Серверная разработка, API, базы данных и микросервисы с использованием современных технологий</p>
+                <h2>Бекенд проекты</h2>
+                <p>Серверная разработка, API, базы данных и микросервисы с использованием современных технологий</p>
                 </div>
-                <div class="projects-grid">
-                    <div class="project-card animate" v-for="(project, index) in backendProjects" :key="'backend-'+index">
-                        <div class="project-image">
-                            <i class="fas fa-server"></i>
-                        </div>
-                        <div class="project-content">
-                            <h3>{{ project.title }}</h3>
-                            <p>{{ project.description }}</p>
-                            <div class="project-tags">
-                                <span class="tag" v-for="(tag, tagIndex) in project.tags" :key="'tag-'+tagIndex">{{ tag }}</span>
-                            </div>
-                            <div class="project-links">
-                                <a :href="project.github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
-                                <a :href="project.demo" target="_blank" v-if="project.demo"><i class="fas fa-external-link-alt"></i> Демо</a>
-                            </div>
-                        </div>
+                
+                <!-- Состояние загрузки -->
+                <div v-if="isLoading" class="projects-grid">
+                <div class="project-card" v-for="n in 3" :key="n">
+                    <div class="project-image" style="background: rgba(100, 255, 218, 0.05);">
+                    <div style="width: 60px; height: 60px; background: rgba(100,255,218,0.1); border-radius: 4px;"></div>
                     </div>
+                    <div class="project-content">
+                    <div style="height: 24px; background: rgba(100,255,218,0.1); border-radius: 4px; margin-bottom: 15px;"></div>
+                    <div style="height: 60px; background: rgba(100,255,218,0.05); border-radius: 4px; margin-bottom: 20px;"></div>
+                    <div style="display: flex; gap: 8px; margin-bottom: 25px;">
+                        <div style="width: 60px; height: 24px; background: rgba(100,255,218,0.1); border-radius: 3px;"></div>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                
+                <!-- Ошибка загрузки -->
+                <div v-else-if="error" class="error-message">
+                <p>{{ error }}</p>
+                <button @click="fetchBackendProjects" class="btn" style="margin-top: 20px;">
+                    <i class="fas fa-redo"></i> Попробовать снова
+                </button>
+                </div>
+                
+                <!-- Основной контент -->
+                <div v-else class="projects-grid">
+                <div class="project-card animate" v-for="(project, index) in backendProjects" :key="'backend-'+index">
+                    <div class="project-image">
+                    <i class="fas fa-server"></i>
+                    </div>
+                    <div class="project-content">
+                    <h3>{{ project.title }}</h3>
+                    <p>{{ project.description }}</p>
+                    <div class="project-meta" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 15px;">
+                        <span v-if="project.stars"><i class="fas fa-star"></i> {{ project.stars }} ⭐</span>
+                        <span v-if="project.lastUpdate" style="margin-left: 15px;">
+                        <i class="fas fa-history"></i> Обновлено: {{ project.lastUpdate }}
+                        </span>
+                    </div>
+                    <div class="project-tags">
+                        <span class="tag" v-for="(tag, tagIndex) in project.tags" :key="'tag-'+tagIndex">{{ tag }}</span>
+                    </div>
+                    <div class="project-links">
+                        <a :href="project.github" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                        <a :href="project.demo" target="_blank" v-if="project.demo"><i class="fas fa-external-link-alt"></i> Демо</a>
+                    </div>
+                    </div>
+                </div>
+                
+                <!-- Заглушка если нет проектов -->
+                <div v-if="backendProjects.length === 0" class="no-projects">
+                    <p>Пока нет публичных бэкенд-проектов для отображения</p>
+                    <a href="https://github.com/pwrmind" target="_blank" class="btn" style="margin-top: 20px;">
+                    <i class="fab fa-github"></i> Посмотреть все репозитории
+                    </a>
+                </div>
                 </div>
             </div>
         </section>
@@ -912,30 +952,81 @@
                     subject: '',
                     message: ''
                 });
-                
-                const backendProjects = ref([
-                    {
+
+                const backendProjects = ref([]); // Изначально пустой массив
+                const isLoading = ref(true);
+                const error = ref(null);
+
+                async function fetchBackendProjects() {
+                    isLoading.value = true;
+                    error.value = null;
+                    const username = 'pwrmind'; // Ваш GitHub username
+                    
+                    try {
+                    // Исправленный URL с правильным форматом
+                    const url = `https://api.github.com/users/${username}/repos?per_page=10`;
+                    
+                    const response = fetch(url, {
+                        headers: {
+                        'Accept': 'application/vnd.github.v3+json',
+                        // Для увеличения лимита запросов добавьте токен:
+                        // 'Authorization': 'Bearer YOUR_GITHUB_TOKEN'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Ошибка GitHub API: ${response.status}`);
+                    }
+
+                    const repos = response.json();
+                    
+                    // Фильтрация бэкенд-проектов по языку и наличию описания
+                    const backendRepos = repos
+                        .filter(repo => {
+                        const backendLanguages = [
+                            'JavaScript', 'TypeScript', 'Python', 'Java', 'Go', 
+                            'Ruby', 'PHP', 'C#', 'Rust', 'Node.js'
+                        ];
+                        return (
+                            backendLanguages.includes(repo.language) && 
+                            repo.description && // Только с описанием
+                            !repo.fork // Исключаем форки
+                        );
+                        })
+                        .slice(0, 3); // Берем первые 3 подходящих проекта
+                    
+                    // Преобразование в нужный формат
+                    backendProjects.value = backendRepos.map(repo => ({
+                        title: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+                        description: repo.description,
+                        tags: [
+                        repo.language,
+                        ...repo.topics.slice(0, 2) // Берем первые 2 топика как теги
+                        ].filter(Boolean),
+                        github: repo.html_url,
+                        demo: repo.homepage || null,
+                        // Дополнительные данные для отображения
+                        stars: repo.stargazers_count,
+                        lastUpdate: new Date(repo.updated_at).toLocaleDateString('ru-RU')
+                    }));
+                    
+                    } catch (err) {
+                    console.error('Ошибка загрузки проектов:', err);
+                    error.value = err.message || 'Не удалось загрузить проекты';
+                    // Резервные данные на случай ошибки
+                    backendProjects.value = [
+                        {
                         title: "RESTful API сервис",
-                        description: "Масштабируемый API для e-commerce платформы с аутентификацией JWT и платежной интеграцией",
-                        tags: ["Node.js", "Express", "MongoDB", "JWT"],
-                        github: "#",
-                        demo: "#"
-                    },
-                    {
-                        title: "Микросервисная архитектура",
-                        description: "Система управления заказами на основе микросервисов с использованием Docker и Kubernetes",
-                        tags: ["Docker", "Kubernetes", "gRPC", "RabbitMQ"],
+                        description: "Масштабируемый API для e-commerce платформы с аутентификацией JWT",
+                        tags: ["Node.js", "Express", "MongoDB"],
                         github: "#",
                         demo: null
-                    },
-                    {
-                        title: "Аналитическая платформа",
-                        description: "Серверная часть для сбора и обработки больших данных с визуализацией в реальном времени",
-                        tags: ["Python", "Django", "PostgreSQL", "Redis"],
-                        github: "#",
-                        demo: "#"
+                        }
+                    ];
+                    } finally {
+                    isLoading.value = false;
                     }
-                ]);
+                }
                 
                 const frontendProjects = ref([
                     {
@@ -1053,6 +1144,7 @@
                 }
                 
                 onMounted(() => {
+                    fetchBackendProjects();
                     window.addEventListener('scroll', handleScroll);
                     handleScroll();
                     
@@ -1070,9 +1162,12 @@
                     mobileMenu,
                     form,
                     backendProjects,
+                    isLoading,
+                    error,
                     frontendProjects,
                     llmProjects,
                     systemProjects,
+                    fetchBackendProjects,
                     toggleMobileMenu,
                     scrollToSection,
                     submitForm
