@@ -974,10 +974,10 @@
                     })
                     .then(repos => {
                     // Фильтрация и преобразование данных
-                    const backendRepos = repos
+                    const backendRepos = repos;
                         //.filter(repo => ['JavaScript', 'TypeScript', 'Python', 'Java', 'Go'].includes(repo.language) && repo.description)
                         //.filter(repo => [].includes(repo.language) && repo.description)
-                        .slice(0, 3);
+                        //.slice(0, 3);
                     
                     backendProjects.value = backendRepos.map(repo => ({
                         title: repo.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
